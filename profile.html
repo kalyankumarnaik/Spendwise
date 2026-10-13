@@ -74,29 +74,73 @@
 
     <section class="profile-content">
       <div class="profile-card">
-        <h2>Account Details</h2>
+        <h2>Profile Settings</h2>
 
-        <div class="profile-detail">
-          <strong>Name</strong>
-          <span id="profileName">Loading...</span>
+        <!-- Avatar Picture & Controls -->
+        <div class="profile-avatar-section">
+          <div class="avatar-large" id="avatarPreviewContainer">
+            <span id="avatarPlaceholder">👤</span>
+            <img id="avatarImage" src="" alt="Profile Photo" style="display: none;">
+          </div>
+          <div class="avatar-controls">
+            <div class="avatar-buttons">
+              <button type="button" id="uploadPhotoBtn" class="secondary-button">
+                📷 Upload Photo
+              </button>
+              <button type="button" id="removePhotoBtn" class="secondary-button" style="display: none;">
+                Remove Photo
+              </button>
+            </div>
+            <input type="file" id="avatarFileInput" accept="image/png, image/jpeg, image/webp" style="display: none;">
+            <p class="avatar-hint">JPG, PNG or WebP. Automatically compressed.</p>
+          </div>
         </div>
 
         <div class="profile-detail">
-          <strong>Email</strong>
+          <strong>Email Address</strong>
           <span id="profileEmail">Loading...</span>
         </div>
 
-        <div class="profile-actions">
-          <button id="backButton" type="button" class="page-button">
-            Back to Dashboard
+        <div class="profile-detail" style="display: none;">
+          <strong>Current Name</strong>
+          <span id="profileName">Loading...</span>
+        </div>
+
+        <!-- Edit Profile Form -->
+        <form id="profileForm" style="margin-top: 20px;">
+          <label for="editDisplayName">Display Name</label>
+          <input
+            type="text"
+            id="editDisplayName"
+            placeholder="Enter your full name"
+            required
+          >
+
+          <label for="editPhotoURL" style="margin-top: 14px;">Photo URL (Optional)</label>
+          <input
+            type="url"
+            id="editPhotoURL"
+            placeholder="https://example.com/avatar.jpg"
+          >
+
+          <div style="margin-top: 20px;">
+            <button type="submit" id="saveProfileBtn" class="page-button">
+              Save Profile Changes
+            </button>
+          </div>
+        </form>
+
+        <p id="profileMessage" role="status"></p>
+
+        <div class="profile-actions" style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border);">
+          <button id="backButton" type="button" class="secondary-button">
+            ← Back to Dashboard
           </button>
 
-          <button id="logoutButton" type="button">
+          <button id="logoutButton" type="button" class="danger-button">
             Log Out
           </button>
         </div>
-
-        <p id="profileMessage" role="status"></p>
       </div>
     </section>
 
