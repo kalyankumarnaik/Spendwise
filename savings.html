@@ -17,16 +17,16 @@
       <p>Smart Expense Tracker</p>
     </div>
 
-    <nav class="sidebar-nav">
+    <nav class="sidebar-nav" aria-label="Main navigation">
       <a href="index.html" class="nav-link"><span>▦</span> Dashboard</a>
       <a href="expenses.html" class="nav-link"><span>▤</span> Expenses</a>
       <a href="budget.html" class="nav-link"><span>◉</span> Budget</a>
-      <a href="bills.html" class="nav-link"><span>▣</span> Bills & Payments</a>
-      <a href="savings.html" class="nav-link active"><span>◆</span> Savings & Investments</a>
+      <a href="bills.html" class="nav-link"><span>▣</span> Bills &amp; Payments</a>
+      <a href="savings.html" class="nav-link active"><span>◆</span> Savings &amp; Investments</a>
     </nav>
 
     <div class="sidebar-bottom">
-      <a href="profile.html" class="nav-link"><span>◉</span> My Profile</a>
+      <a href="profile.html" class="nav-link"><span>👤</span> My Profile</a>
       <button id="logoutButton" type="button" class="sidebar-logout">
         Log Out
       </button>
@@ -35,29 +35,38 @@
 
   <!-- MAIN CONTENT -->
   <main class="main-content">
+    <button class="sidebar-toggle" id="sidebarToggle"
+      type="button" aria-label="Open navigation"
+      aria-expanded="false">
+      ☰
+    </button>
 
     <header class="topbar">
       <div>
-        <h1>Savings & Investments</h1>
+        <h1>Savings &amp; Investments</h1>
         <p>Set financial goals and track your savings progress.</p>
       </div>
+      <a href="profile.html" class="top-profile" aria-label="My Profile">
+        <span class="avatar" aria-hidden="true">👤</span>
+        <span>My Profile</span>
+      </a>
     </header>
 
     <!-- SUMMARY CARDS -->
     <section class="summary-cards">
       <article class="card">
-        <h3>Total Saved</h3>
-        <p id="totalSaved">₹0</p>
+        <p>Total Saved</p>
+        <h3 id="totalSaved">₹0.00</h3>
       </article>
 
       <article class="card">
-        <h3>Total Targets</h3>
-        <p id="totalTargets">₹0</p>
+        <p>Total Targets</p>
+        <h3 id="totalTargets">₹0.00</h3>
       </article>
 
       <article class="card">
-        <h3>Active Goals</h3>
-        <p id="activeGoals">0</p>
+        <p>Active Goals</p>
+        <h3 id="activeGoals">0</h3>
       </article>
     </section>
 
@@ -97,7 +106,7 @@
         <label for="targetDate">Target Date</label>
         <input type="date" id="targetDate" required>
 
-        <button type="submit">Create Goal</button>
+        <button type="submit" class="page-button" style="margin-top: 10px;">Create Goal</button>
       </form>
 
       <p id="savingsMessage" role="status"></p>
@@ -112,9 +121,13 @@
       <p id="emptySavingsMessage">No savings goals yet. Create your first goal!</p>
     </section>
 
+    <footer class="footer">
+      © 2026 SpendWise. Manage your money wisely.
+    </footer>
   </main>
 </div>
 
+<script src="nav.js"></script>
 <script type="module" src="savings-auth.js"></script>
 </body>
 </html>

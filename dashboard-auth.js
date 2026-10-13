@@ -1,9 +1,9 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 
 import {
   getAuth,
-  onAuthStateChanged
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -19,28 +19,32 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+let pageLoaded = false;
+
 onAuthStateChanged(auth, (user) => {
-  if (!user) {const logoutButton = document.getElementById("logoutButton");
-
-logoutButton.addEventListener("click", async () => {
-  try {
-    const { signOut } = await import(
-      "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js"
-    );
-
-    await signOut(auth);
-    window.location.replace("login.html");
-  } catch (error) {
-    console.error("Logout failed:", error);
-    alert("Unable to log out. Please try again.");
-  }
-});
+  if (!user) {
     window.location.replace("login.html");
     return;
   }
 
-  // Load expense-tracking JavaScript only after authentication.
-  const script = document.createElement("script");
-  script.src = "dashboard.js";
-  document.body.appendChild(script);
+  const logoutButton = document.getElementById("logoutButton");
+  if (logoutButton) {
+    logoutButton.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        window.location.replace("login.html");
+      } catch (error) {
+        console.error("Logout failed:", error);
+        alert("Unable to log out. Please try again.");
+      }
+    });
+  }
+
+  if (!pageLoaded) {
+    pageLoaded = true;
+    // Load expense-tracking JavaScript only after authentication.
+    const script = document.createElement("script");
+    script.src = "dashboard.js";
+    document.body.appendChild(script);
+  }
 });

@@ -1,319 +1,109 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile | SpendWise</title>
-
-    <link rel="stylesheet" href="login.css">
-    <link rel="stylesheet" href="style.css">
-
-    <style>
-        .profile-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .profile-card {
-            background: var(--white, #ffffff);
-            border: 1px solid var(--border, #e0e9e3);
-            border-radius: 14px;
-            padding: 28px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
-        }
-
-        .profile-card h2 {
-            margin-top: 0;
-            margin-bottom: 24px;
-        }
-
-        .profile-detail {
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border, #e0e9e3);
-            overflow-wrap: anywhere;
-        }
-
-        .profile-detail strong {
-            display: block;
-            margin-bottom: 7px;
-        }
-
-        .profile-detail span {
-            color: var(--muted, #728078);
-        }
-
-        .profile-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .profile-actions button {
-            padding: 12px 18px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font: inherit;
-        }
-
-        #backButton {
-            background: var(--primary, #167a55);
-            color: white;
-        }
-
-        .profile-actions #logoutButton {
-            background: #dc2626;
-            color: white;
-        }
-
-        #profileMessage {
-            overflow-wrap: anywhere;
-        }
-
-        /* Mobile sidebar toggle */
-        .sidebar-toggle {
-            display: none;
-        }
-
-        .sidebar-overlay {
-            display: none;
-        }
-
-        @media (max-width: 650px) {
-            .sidebar-toggle {
-                display: block;
-                position: fixed;
-                top: 12px;
-                left: 12px;
-                width: 44px;
-                height: 44px;
-                border: none;
-                border-radius: 8px;
-                background: var(--primary, #167a55);
-                color: white;
-                font-size: 25px;
-                cursor: pointer;
-                z-index: 1002;
-            }
-
-            .sidebar {
-                position: fixed !important;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                width: 270px !important;
-                min-width: 0 !important;
-                height: 100vh !important;
-                height: 100dvh !important;
-                min-height: 0 !important;
-                overflow-y: auto;
-                z-index: 1001;
-                transform: translateX(-100%);
-                visibility: hidden;
-                transition: transform 0.25s ease,
-                            visibility 0.25s ease;
-                background: var(--white, #ffffff);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-                visibility: visible;
-                box-shadow: 5px 0 20px rgba(0, 0, 0, 0.15);
-            }
-
-            .sidebar-nav {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .sidebar-overlay.visible {
-                display: block;
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.45);
-                z-index: 1000;
-            }
-
-            .main-content {
-                width: 100%;
-                max-width: 100%;
-                margin: 0;
-                padding: 75px 16px 24px;
-            }
-
-            .profile-card {
-                padding: 20px 16px;
-            }
-
-            .profile-actions {
-                flex-direction: column;
-            }
-
-            .profile-actions button {
-                width: 100%;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile | SpendWise</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <div class="app-layout">
 
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <h2>₹ SpendWise</h2>
+      <p>Smart Expense Tracker</p>
+    </div>
 
-        <div class="sidebar-brand">
-            <h2>₹ SpendWise</h2>
-            <p>Smart Expense Tracker</p>
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <a href="index.html" class="nav-link">
+        <span>▦</span> Dashboard
+      </a>
+
+      <a href="expenses.html" class="nav-link">
+        <span>▤</span> Expenses
+      </a>
+
+      <a href="budget.html" class="nav-link">
+        <span>◉</span> Budget
+      </a>
+
+      <a href="bills.html" class="nav-link">
+        <span>▣</span> Bills &amp; Payments
+      </a>
+
+      <a href="savings.html" class="nav-link">
+        <span>◆</span> Savings &amp; Investments
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <a href="profile.html" class="nav-link active" aria-current="page">
+        <span>👤</span> My Profile
+      </a>
+
+      <button id="sidebarLogoutButton" type="button" class="sidebar-logout">
+        Log Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <button class="sidebar-toggle" id="sidebarToggle"
+      type="button" aria-label="Open navigation"
+      aria-expanded="false">
+      ☰
+    </button>
+
+    <header class="topbar">
+      <div>
+        <h1>My Profile</h1>
+        <p>Manage your SpendWise account.</p>
+      </div>
+      <a href="profile.html" class="top-profile active" aria-label="My Profile">
+        <span class="avatar" aria-hidden="true">👤</span>
+        <span>My Profile</span>
+      </a>
+    </header>
+
+    <section class="profile-content">
+      <div class="profile-card">
+        <h2>Account Details</h2>
+
+        <div class="profile-detail">
+          <strong>Name</strong>
+          <span id="profileName">Loading...</span>
         </div>
 
-        <nav class="sidebar-nav" aria-label="Main navigation">
-            <a href="index.html" class="nav-link">
-                <span>🏠</span> Dashboard
-            </a>
+        <div class="profile-detail">
+          <strong>Email</strong>
+          <span id="profileEmail">Loading...</span>
+        </div>
 
-            <a href="expenses.html" class="nav-link">
-                <span>💸</span> Expenses
-            </a>
+        <div class="profile-actions">
+          <button id="backButton" type="button" class="page-button">
+            Back to Dashboard
+          </button>
 
-            <a href="budget.html" class="nav-link">
-                <span>📊</span> Budget
-            </a>
+          <button id="logoutButton" type="button">
+            Log Out
+          </button>
+        </div>
 
-            <a href="bills.html" class="nav-link">
-                <span>🧾</span> Bills &amp; Payments
-            </a>
+        <p id="profileMessage" role="status"></p>
+      </div>
+    </section>
 
-            <a href="savings.html" class="nav-link">
-                <span>💰</span> Savings &amp; Investments
-            </a>
-
-            <a href="profile.html" class="nav-link active"
-               aria-current="page">
-                <span>👤</span> My Profile
-            </a>
-        </nav>
-
-    </aside>
-
-    <!-- Mobile overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <!-- Main content -->
-    <main class="main-content">
-
-        <button
-            class="sidebar-toggle"
-            id="sidebarToggle"
-            type="button"
-            aria-label="Open navigation"
-            aria-controls="sidebar"
-            aria-expanded="false">
-            ☰
-        </button>
-
-        <header class="topbar">
-            <div>
-                <h1>My Profile</h1>
-                <p>Manage your SpendWise account.</p>
-            </div>
-        </header>
-
-        <section class="profile-content">
-            <div class="profile-card">
-
-                <h2>Account Details</h2>
-
-                <div class="profile-detail">
-                    <strong>Name</strong>
-                    <span id="profileName">Loading...</span>
-                </div>
-
-                <div class="profile-detail">
-                    <strong>Email</strong>
-                    <span id="profileEmail">Loading...</span>
-                </div>
-
-                <div class="profile-actions">
-                    <button id="backButton" type="button">
-                        Back to Dashboard
-                    </button>
-
-                    <button id="logoutButton" type="button">
-                        Log Out
-                    </button>
-                </div>
-
-                <p id="profileMessage" role="status"></p>
-
-            </div>
-        </section>
-
-        <footer class="footer">
-            SpendWise — Smart Expense Tracker
-        </footer>
-
-    </main>
-
+    <footer class="footer">
+      © 2026 SpendWise. Manage your money wisely.
+    </footer>
+  </main>
 </div>
 
-<!-- Preserve existing profile functionality -->
+<script src="nav.js"></script>
 <script type="module" src="profile.js"></script>
-
-<!-- Mobile sidebar behavior -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const sidebar = document.getElementById("sidebar");
-        const toggle = document.getElementById("sidebarToggle");
-        const overlay = document.getElementById("sidebarOverlay");
-
-        if (!sidebar || !toggle || !overlay) return;
-
-        function setSidebar(open) {
-            sidebar.classList.toggle("open", open);
-            overlay.classList.toggle("visible", open);
-
-            toggle.textContent = open ? "✕" : "☰";
-            toggle.setAttribute("aria-expanded", String(open));
-            toggle.setAttribute(
-                "aria-label",
-                open ? "Close navigation" : "Open navigation"
-            );
-
-            document.body.style.overflow =
-                open && window.innerWidth <= 650 ? "hidden" : "";
-        }
-
-        toggle.addEventListener("click", function () {
-            setSidebar(!sidebar.classList.contains("open"));
-        });
-
-        overlay.addEventListener("click", function () {
-            setSidebar(false);
-        });
-
-        sidebar.querySelectorAll(".nav-link").forEach(function (link) {
-            link.addEventListener("click", function () {
-                setSidebar(false);
-            });
-        });
-
-        document.addEventListener("keydown", function (event) {
-            if (event.key === "Escape") {
-                setSidebar(false);
-            }
-        });
-
-        window.addEventListener("resize", function () {
-            if (window.innerWidth > 650) {
-                setSidebar(false);
-            }
-        });
-    });
-</script>
-
 </body>
 </html>

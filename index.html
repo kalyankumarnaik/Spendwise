@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,7 +41,7 @@
 
       <div class="sidebar-bottom">
         <a href="profile.html" class="nav-link">
-          <span>◉</span> My Profile
+          <span>👤</span> My Profile
         </a>
 
         <button id="logoutButton" type="button" class="sidebar-logout">
@@ -53,6 +52,11 @@
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
+      <button class="sidebar-toggle" id="sidebarToggle"
+        type="button" aria-label="Open navigation"
+        aria-expanded="false">
+        ☰
+      </button>
 
       <!-- TOP BAR -->
       <header class="topbar">
@@ -62,7 +66,7 @@
         </div>
 
         <a href="profile.html" class="top-profile" aria-label="My Profile">
-          <span class="avatar">👤</span>
+          <span class="avatar" aria-hidden="true">👤</span>
           <span>My Profile</span>
         </a>
       </header>
@@ -102,13 +106,12 @@
           <a href="budget.html">Manage Budget →</a>
         </div>
         <div class="content-card">
-             <div class="budget-track">
-  <div id="budgetProgress" class="budget-progress"></div>
-</div>
+          <div class="budget-track">
+            <div id="budgetProgress" class="budget-progress"></div>
+          </div>
           <p>Spent This Month: <strong id="monthlySpent">₹0.00</strong></p>
           <p id="budgetMessage">Set a budget to track your spending.</p>
         </div>
-        
       </section>
 
       <!-- ANALYTICS -->
@@ -152,6 +155,7 @@
     </main>
   </div>
 
+  <script src="nav.js"></script>
   <script type="module" src="dashboard-auth.js"></script>
 </body>
 </html>

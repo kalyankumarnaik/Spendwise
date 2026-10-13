@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,48 +10,60 @@
 
 <div class="app-layout">
 
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <h2>₹ SpendWise</h2>
       <p>Smart Expense Tracker</p>
     </div>
 
-    <nav class="sidebar-nav">
+    <nav class="sidebar-nav" aria-label="Main navigation">
       <a href="index.html" class="nav-link"><span>▦</span> Dashboard</a>
       <a href="expenses.html" class="nav-link"><span>▤</span> Expenses</a>
       <a href="budget.html" class="nav-link active"><span>◉</span> Budget</a>
-      <a href="bills.html" class="nav-link"><span>▣</span> Bills & Payments</a>
-      <a href="savings.html" class="nav-link"><span>◆</span> Savings & Investments</a>
+      <a href="bills.html" class="nav-link"><span>▣</span> Bills &amp; Payments</a>
+      <a href="savings.html" class="nav-link"><span>◆</span> Savings &amp; Investments</a>
     </nav>
 
     <div class="sidebar-bottom">
-      <a href="profile.html" class="nav-link"><span>◉</span> My Profile</a>
+      <a href="profile.html" class="nav-link"><span>👤</span> My Profile</a>
       <button id="logoutButton" type="button" class="sidebar-logout">Log Out</button>
     </div>
   </aside>
 
+  <!-- MAIN CONTENT -->
   <main class="main-content">
+    <button class="sidebar-toggle" id="sidebarToggle"
+      type="button" aria-label="Open navigation"
+      aria-expanded="false">
+      ☰
+    </button>
+
     <header class="topbar">
       <div>
         <h1>Monthly Budget</h1>
         <p>Plan your spending and stay within your limits.</p>
       </div>
+      <a href="profile.html" class="top-profile" aria-label="My Profile">
+        <span class="avatar" aria-hidden="true">👤</span>
+        <span>My Profile</span>
+      </a>
     </header>
 
     <section class="summary-cards">
       <article class="card">
-        <h3>Monthly Budget</h3>
-        <p id="budgetAmount">₹0</p>
+        <p>Monthly Budget</p>
+        <h3 id="budgetAmount">₹0.00</h3>
       </article>
 
       <article class="card">
-        <h3>Total Spent</h3>
-        <p id="budgetSpent">₹0</p>
+        <p>Total Spent</p>
+        <h3 id="budgetSpent">₹0.00</h3>
       </article>
 
       <article class="card">
-        <h3>Remaining Balance</h3>
-        <p id="budgetRemaining">₹0</p>
+        <p>Remaining Balance</p>
+        <h3 id="budgetRemaining">₹0.00</h3>
       </article>
     </section>
 
@@ -68,7 +79,7 @@
           placeholder="Enter monthly budget"
           required
         >
-        <button type="submit">Save Budget</button>
+        <button type="submit" class="page-button" style="margin-top: 10px;">Save Budget</button>
       </form>
       <p id="budgetMessage" role="status"></p>
     </section>
@@ -82,10 +93,14 @@
       <p id="budgetStatus">Set a budget to start tracking your spending.</p>
     </section>
 
+    <footer class="footer">
+      © 2026 SpendWise. Manage your money wisely.
+    </footer>
+
   </main>
 </div>
 
+<script src="nav.js"></script>
 <script type="module" src="budget-auth.js"></script>
 </body>
 </html>
-```

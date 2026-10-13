@@ -17,16 +17,16 @@
       <p>Smart Expense Tracker</p>
     </div>
 
-    <nav class="sidebar-nav">
+    <nav class="sidebar-nav" aria-label="Main navigation">
       <a href="index.html" class="nav-link"><span>▦</span> Dashboard</a>
       <a href="expenses.html" class="nav-link"><span>▤</span> Expenses</a>
       <a href="budget.html" class="nav-link"><span>◉</span> Budget</a>
-      <a href="bills.html" class="nav-link active"><span>▣</span> Bills & Payments</a>
-      <a href="savings.html" class="nav-link"><span>◆</span> Savings & Investments</a>
+      <a href="bills.html" class="nav-link active"><span>▣</span> Bills &amp; Payments</a>
+      <a href="savings.html" class="nav-link"><span>◆</span> Savings &amp; Investments</a>
     </nav>
 
     <div class="sidebar-bottom">
-      <a href="profile.html" class="nav-link"><span>◉</span> My Profile</a>
+      <a href="profile.html" class="nav-link"><span>👤</span> My Profile</a>
       <button id="logoutButton" type="button" class="sidebar-logout">
         Log Out
       </button>
@@ -35,27 +35,37 @@
 
   <!-- MAIN CONTENT -->
   <main class="main-content">
+    <button class="sidebar-toggle" id="sidebarToggle"
+      type="button" aria-label="Open navigation"
+      aria-expanded="false">
+      ☰
+    </button>
+
     <header class="topbar">
       <div>
-        <h1>Bills & Payments</h1>
+        <h1>Bills &amp; Payments</h1>
         <p>Manage your upcoming bills and payment status.</p>
       </div>
+      <a href="profile.html" class="top-profile" aria-label="My Profile">
+        <span class="avatar" aria-hidden="true">👤</span>
+        <span>My Profile</span>
+      </a>
     </header>
 
     <section class="summary-cards">
       <article class="card">
-        <h3>Total Bills</h3>
-        <p id="totalBills">0</p>
+        <p>Total Bills</p>
+        <h3 id="totalBills">0</h3>
       </article>
 
       <article class="card">
-        <h3>Pending Bills</h3>
-        <p id="pendingBills">0</p>
+        <p>Pending Bills</p>
+        <h3 id="pendingBills">0</h3>
       </article>
 
       <article class="card">
-        <h3>Paid Bills</h3>
-        <p id="paidBills">0</p>
+        <p>Paid Bills</p>
+        <h3 id="paidBills">0</h3>
       </article>
     </section>
 
@@ -64,7 +74,7 @@
 
       <form id="billForm">
         <label for="billTitle">Bill Name</label>
-        <input type="text" id="billTitle" placeholder="Electricity bill" required>
+        <input type="text" id="billTitle" placeholder="e.g. Electricity bill" required>
 
         <label for="billAmount">Amount (₹)</label>
         <input type="number" id="billAmount" min="0.01" step="0.01" placeholder="Enter amount" required>
@@ -72,7 +82,7 @@
         <label for="billDueDate">Due Date</label>
         <input type="date" id="billDueDate" required>
 
-        <button type="submit">Add Bill</button>
+        <button type="submit" class="page-button" style="margin-top: 10px;">Add Bill</button>
       </form>
 
       <p id="billMessage" role="status"></p>
@@ -98,9 +108,14 @@
 
       <p id="emptyBillsMessage">No bills added yet.</p>
     </section>
+
+    <footer class="footer">
+      © 2026 SpendWise. Manage your money wisely.
+    </footer>
   </main>
 </div>
 
+<script src="nav.js"></script>
 <script type="module" src="bills-auth.js"></script>
 </body>
 </html>

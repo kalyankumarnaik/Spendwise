@@ -1,4 +1,3 @@
-
 import { initializeApp, getApps, getApp } from
   "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 
@@ -36,16 +35,31 @@ onAuthStateChanged(auth, (user) => {
   profileEmail.textContent = user.email || "Not available";
 });
 
-document.getElementById("backButton").addEventListener("click", () => {
-  window.location.href = "index.html";
-});
+const backButton = document.getElementById("backButton");
+if (backButton) {
+  backButton.addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
+}
 
-document.getElementById("logoutButton").addEventListener("click", async () => {
+async function handleLogout() {
   try {
     await signOut(auth);
     window.location.replace("login.html");
   } catch (error) {
     console.error(error);
-    profileMessage.textContent = "Unable to log out. Please try again.";
+    if (profileMessage) {
+      profileMessage.textContent = "Unable to log out. Please try again.";
+    }
   }
-});
+}
+
+const logoutBtn = document.getElementById("logoutButton");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", handleLogout);
+}
+
+const sidebarLogoutBtn = document.getElementById("sidebarLogoutButton");
+if (sidebarLogoutBtn) {
+  sidebarLogoutBtn.addEventListener("click", handleLogout);
+}
