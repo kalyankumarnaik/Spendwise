@@ -84,14 +84,14 @@
           </div>
           <div class="avatar-controls">
             <div class="avatar-buttons">
-              <label for="avatarFileInput" id="uploadPhotoLabel" class="secondary-button" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+              <button type="button" id="choosePhotoBtn" class="secondary-button" style="display: inline-flex; align-items: center; gap: 6px;">
                 📷 Choose Photo
-              </label>
+              </button>
               <button type="button" id="removePhotoBtn" class="secondary-button" style="display: none;">
                 Remove Photo
               </button>
             </div>
-            <input type="file" id="avatarFileInput" accept="image/*" style="position: absolute; opacity: 0; width: 0.1px; height: 0.1px; pointer-events: none;">
+            <input type="file" id="avatarFileInput" accept="image/*" style="display: none;">
             <p class="avatar-hint">JPG, PNG, WebP or pick an avatar below.</p>
           </div>
         </div>
