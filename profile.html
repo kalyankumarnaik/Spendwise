@@ -84,15 +84,30 @@
           </div>
           <div class="avatar-controls">
             <div class="avatar-buttons">
-              <button type="button" id="uploadPhotoBtn" class="secondary-button">
-                📷 Upload Photo
-              </button>
+              <label for="avatarFileInput" id="uploadPhotoLabel" class="secondary-button" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                📷 Choose Photo
+              </label>
               <button type="button" id="removePhotoBtn" class="secondary-button" style="display: none;">
                 Remove Photo
               </button>
             </div>
-            <input type="file" id="avatarFileInput" accept="image/png, image/jpeg, image/webp" style="display: none;">
-            <p class="avatar-hint">JPG, PNG or WebP. Automatically compressed.</p>
+            <input type="file" id="avatarFileInput" accept="image/*" style="position: absolute; opacity: 0; width: 0.1px; height: 0.1px; pointer-events: none;">
+            <p class="avatar-hint">JPG, PNG, WebP or pick an avatar below.</p>
+          </div>
+        </div>
+
+        <!-- Avatar Presets -->
+        <div class="avatar-presets-container" style="margin-bottom: 20px;">
+          <label style="margin-bottom: 6px;">Or Pick an Avatar</label>
+          <div class="avatar-presets-grid" id="avatarPresets">
+            <button type="button" class="preset-btn" data-avatar="👨‍💼" title="Professional">👨‍💼</button>
+            <button type="button" class="preset-btn" data-avatar="👩‍💼" title="Business">👩‍💼</button>
+            <button type="button" class="preset-btn" data-avatar="🧑‍💻" title="Tech">🧑‍💻</button>
+            <button type="button" class="preset-btn" data-avatar="🚀" title="Rocket">🚀</button>
+            <button type="button" class="preset-btn" data-avatar="🦁" title="Lion">🦁</button>
+            <button type="button" class="preset-btn" data-avatar="💎" title="Diamond">💎</button>
+            <button type="button" class="preset-btn" data-avatar="🦊" title="Fox">🦊</button>
+            <button type="button" class="preset-btn" data-avatar="🎯" title="Target">🎯</button>
           </div>
         </div>
 
