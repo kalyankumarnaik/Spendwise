@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendWise | Expenses</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-card { background:#fff; border:1px solid #e0e9e3; border-radius:13px; padding:22px; margin-bottom:24px; }
+    .expense-form-grid, .filter-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    .expense-form-grid label, .filter-grid label { display:block; font-size:14px; margin-bottom:7px; }
+    .expense-form-grid input, .expense-form-grid select, .filter-grid input, .filter-grid select { width:100%; padding:11px; border:1px solid #cbd8cf; border-radius:7px; font:inherit; }
+    .page-button { background:#167a55; color:#fff; border:0; border-radius:8px; padding:11px 16px; cursor:pointer; }
+    .secondary-button { background:#edf3ef; color:#1d3028; border:1px solid #d4e0d7; border-radius:8px; padding:10px 14px; cursor:pointer; }
+    .expense-actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .expense-actions button { padding:7px 10px; cursor:pointer; }
+    .page-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
+    .page-toolbar h2 { margin:0; }
+    .table-container { overflow-x:auto; }
+    @media(max-width:650px) {
+      .expense-form-grid, .filter-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <h2>₹ SpendWise</h2>
+      <p>Smart Expense Tracker</p>
+    </div>
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <a href="index.html" class="nav-link"><span>▦</span> Dashboard</a>
+      <a href="expenses.html" class="nav-link active"><span>▤</span> Expenses</a>
+      <a href="budget.html" class="nav-link"><span>◉</span> Budget</a>
+      <a href="bills.html" class="nav-link"><span>▣</span> Bills &amp; Payments</a>
+      <a href="savings.html" class="nav-link"><span>◆</span> Savings &amp; Investments</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="profile.html" class="nav-link"><span>◉</span> My Profile</a>
+      <button id="logoutButton" class="sidebar-logout" type="button">Log Out</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <h1>Expenses</h1>
+        <p id="currentDate"></p>
+      </div>
+      <a href="profile.html" class="top-profile">
+        <span class="avatar" aria-hidden="true">👤</span> My Profile
+      </a>
+    </header>
+
+    <section class="dashboard-section">
+      <div class="summary-cards">
+        <article class="card">
+          <p>Total Expenses</p>
+          <h3 id="expenseTotal">₹0.00</h3>
+        </article>
+        <article class="card">
+          <p>Transactions</p>
+          <h3 id="expenseCount">0</h3>
+        </article>
+        <article class="card">
+          <p>Average Expense</p>
+          <h3 id="expenseAverage">₹0.00</h3>
+        </article>
+      </div>
+    </section>
+
+    <section class="page-card">
+      <div class="page-toolbar">
+        <h2 id="formHeading">Add Expense</h2>
+      </div>
+      <form id="expenseForm">
+        <div class="expense-form-grid">
+          <div>
+            <label for="expenseTitle">Expense Name</label>
+            <input id="expenseTitle" type="text" placeholder="e.g. Groceries" required>
+          </div>
+          <div>
+            <label for="expenseCategory">Category</label>
+            <select id="expenseCategory" required>
+              <option value="">Select category</option>
+              <option>Food</option><option>Travel</option><option>Shopping</option>
+              <option>Bills</option><option>Education</option><option>Health</option>
+              <option>Entertainment</option><option>Investment</option><option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="expenseAmount">Amount (₹)</label>
+            <input id="expenseAmount" type="number" min="0.01" step="0.01" placeholder="Enter amount" required>
+          </div>
+          <div>
+            <label for="expenseDate">Date</label>
+            <input id="expenseDate" type="date" required>
+          </div>
+        </div>
+        <div class="expense-actions" style="margin-top:16px">
+          <button class="page-button" id="saveExpenseButton" type="submit">Add Expense</button>
+          <button class="secondary-button" id="cancelEditButton" type="button" hidden>Cancel Edit</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="page-card">
+      <div class="page-toolbar">
+        <h2>Transaction History</h2>
+        <button class="page-button" id="exportExpensesButton" type="button">Export CSV</button>
+      </div>
+
+      <div class="filter-grid">
+        <div>
+          <label for="expenseSearch">Search</label>
+          <input id="expenseSearch" type="search" placeholder="Search expenses...">
+        </div>
+        <div>
+          <label for="categoryFilter">Category</label>
+          <select id="categoryFilter">
+            <option value="">All Categories</option>
+            <option>Food</option><option>Travel</option><option>Shopping</option>
+            <option>Bills</option><option>Education</option><option>Health</option>
+            <option>Entertainment</option><option>Investment</option><option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="fromDate">From Date</label>
+          <input id="fromDate" type="date">
+        </div>
+        <div>
+          <label for="toDate">To Date</label>
+          <input id="toDate" type="date">
+        </div>
+      </div>
+      <button class="secondary-button" id="clearExpenseFilters" type="button" style="margin-top:14px">Clear Filters</button>
+
+      <div class="table-container" style="margin-top:20px">
+        <table>
+          <thead>
+            <tr><th>Expense</th><th>Category</th><th>Amount</th><th>Date</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="expenseTableBody"></tbody>
+        </table>
+      </div>
+      <p id="noExpensesMessage">No expenses added yet.</p>
+    </section>
+
+    <footer class="footer">© 2026 SpendWise. Manage your money wisely.</footer>
+  </main>
+</div>
+
+<script type="module" src="expenses-auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendWise | Budget</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <h2>₹ SpendWise</h2>
+      <p>Smart Expense Tracker</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="index.html" class="nav-link"><span>▦</span> Dashboard</a>
+      <a href="expenses.html" class="nav-link"><span>▤</span> Expenses</a>
+      <a href="budget.html" class="nav-link active"><span>◉</span> Budget</a>
+      <a href="bills.html" class="nav-link"><span>▣</span> Bills & Payments</a>
+      <a href="savings.html" class="nav-link"><span>◆</span> Savings & Investments</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <a href="profile.html" class="nav-link"><span>◉</span> My Profile</a>
+      <button id="logoutButton" type="button" class="sidebar-logout">Log Out</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <h1>Monthly Budget</h1>
+        <p>Plan your spending and stay within your limits.</p>
+      </div>
+    </header>
+
+    <section class="summary-cards">
+      <article class="card">
+        <h3>Monthly Budget</h3>
+        <p id="budgetAmount">₹0</p>
+      </article>
+
+      <article class="card">
+        <h3>Total Spent</h3>
+        <p id="budgetSpent">₹0</p>
+      </article>
+
+      <article class="card">
+        <h3>Remaining Balance</h3>
+        <p id="budgetRemaining">₹0</p>
+      </article>
+    </section>
+
+    <section class="content-card">
+      <h2>Set Your Monthly Budget</h2>
+      <form id="budgetForm">
+        <label for="monthlyBudget">Budget amount (₹)</label>
+        <input
+          type="number"
+          id="monthlyBudget"
+          min="1"
+          step="0.01"
+          placeholder="Enter monthly budget"
+          required
+        >
+        <button type="submit">Save Budget</button>
+      </form>
+      <p id="budgetMessage" role="status"></p>
+    </section>
+
+    <section class="content-card">
+      <h2>Budget Usage</h2>
+      <div class="budget-track">
+        <div id="budgetProgressBar" class="budget-progress"></div>
+      </div>
+      <p id="budgetPercentage">0% used</p>
+      <p id="budgetStatus">Set a budget to start tracking your spending.</p>
+    </section>
+
+  </main>
+</div>
+
+<script type="module" src="budget-auth.js"></script>
+</body>
+</html>
+```

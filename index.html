@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendWise | Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <h2>₹ SpendWise</h2>
+        <p>Smart Expense Tracker</p>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Main navigation">
+        <a href="index.html" class="nav-link active">
+          <span>▦</span> Dashboard
+        </a>
+
+        <a href="expenses.html" class="nav-link">
+          <span>▤</span> Expenses
+        </a>
+
+        <a href="budget.html" class="nav-link">
+          <span>◉</span> Budget
+        </a>
+
+        <a href="bills.html" class="nav-link">
+          <span>▣</span> Bills & Payments
+        </a>
+
+        <a href="savings.html" class="nav-link">
+          <span>◆</span> Savings & Investments
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <a href="profile.html" class="nav-link">
+          <span>◉</span> My Profile
+        </a>
+
+        <button id="logoutButton" type="button" class="sidebar-logout">
+          Log Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <div>
+          <h1>Dashboard</h1>
+          <p id="currentDate"></p>
+        </div>
+
+        <a href="profile.html" class="top-profile" aria-label="My Profile">
+          <span class="avatar">👤</span>
+          <span>My Profile</span>
+        </a>
+      </header>
+
+      <!-- WELCOME -->
+      <section class="welcome-section">
+        <h2>Welcome to SpendWise!</h2>
+        <p>Here's an overview of your financial activity.</p>
+      </section>
+
+      <!-- SUMMARY -->
+      <section class="dashboard-section">
+        <h2>Financial Overview</h2>
+
+        <div class="summary-cards">
+          <article class="card">
+            <p>Total Expenses</p>
+            <h3 id="totalAmount">₹0.00</h3>
+          </article>
+
+          <article class="card">
+            <p>Total Transactions</p>
+            <h3 id="totalCount">0</h3>
+          </article>
+
+          <article class="card">
+            <p>Average Expense</p>
+            <h3 id="averageAmount">₹0.00</h3>
+          </article>
+        </div>
+      </section>
+
+      <!-- BUDGET -->
+      <section class="dashboard-section">
+        <div class="section-title-row">
+          <h2>Monthly Budget</h2>
+          <a href="budget.html">Manage Budget →</a>
+        </div>
+        <div class="content-card">
+             <div class="budget-track">
+  <div id="budgetProgress" class="budget-progress"></div>
+</div>
+          <p>Spent This Month: <strong id="monthlySpent">₹0.00</strong></p>
+          <p id="budgetMessage">Set a budget to track your spending.</p>
+        </div>
+        
+      </section>
+
+      <!-- ANALYTICS -->
+      <section class="dashboard-section">
+        <h2>Spending Analytics</h2>
+
+        <div class="content-card">
+          <canvas id="categoryChart" aria-label="Spending by category"></canvas>
+          <p id="chartMessage">Add expenses to view your analytics.</p>
+        </div>
+      </section>
+
+      <!-- RECENT TRANSACTIONS -->
+      <section class="dashboard-section">
+        <div class="section-title-row">
+          <h2>Recent Transactions</h2>
+          <a href="expenses.html">View All →</a>
+        </div>
+
+        <div class="content-card table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Expense</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="recentTransactions"></tbody>
+          </table>
+
+          <p id="emptyMessage">No transactions yet.</p>
+        </div>
+      </section>
+
+      <footer class="footer">
+        © 2026 SpendWise. Manage your money wisely.
+      </footer>
+
+    </main>
+  </div>
+
+  <script type="module" src="dashboard-auth.js"></script>
+</body>
+</html>

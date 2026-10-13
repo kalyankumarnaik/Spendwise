@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendWise | Savings & Investments</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <h2>₹ SpendWise</h2>
+      <p>Smart Expense Tracker</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="index.html" class="nav-link"><span>▦</span> Dashboard</a>
+      <a href="expenses.html" class="nav-link"><span>▤</span> Expenses</a>
+      <a href="budget.html" class="nav-link"><span>◉</span> Budget</a>
+      <a href="bills.html" class="nav-link"><span>▣</span> Bills & Payments</a>
+      <a href="savings.html" class="nav-link active"><span>◆</span> Savings & Investments</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <a href="profile.html" class="nav-link"><span>◉</span> My Profile</a>
+      <button id="logoutButton" type="button" class="sidebar-logout">
+        Log Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <header class="topbar">
+      <div>
+        <h1>Savings & Investments</h1>
+        <p>Set financial goals and track your savings progress.</p>
+      </div>
+    </header>
+
+    <!-- SUMMARY CARDS -->
+    <section class="summary-cards">
+      <article class="card">
+        <h3>Total Saved</h3>
+        <p id="totalSaved">₹0</p>
+      </article>
+
+      <article class="card">
+        <h3>Total Targets</h3>
+        <p id="totalTargets">₹0</p>
+      </article>
+
+      <article class="card">
+        <h3>Active Goals</h3>
+        <p id="activeGoals">0</p>
+      </article>
+    </section>
+
+    <!-- ADD SAVINGS GOAL -->
+    <section class="content-card">
+      <h2>Create a Savings Goal</h2>
+
+      <form id="savingsForm">
+        <label for="goalName">Goal Name</label>
+        <input
+          type="text"
+          id="goalName"
+          placeholder="e.g. Buy a laptop"
+          required
+        >
+
+        <label for="targetAmount">Target Amount (₹)</label>
+        <input
+          type="number"
+          id="targetAmount"
+          min="1"
+          step="0.01"
+          placeholder="Enter target amount"
+          required
+        >
+
+        <label for="initialSaved">Already Saved (₹)</label>
+        <input
+          type="number"
+          id="initialSaved"
+          min="0"
+          step="0.01"
+          value="0"
+          required
+        >
+
+        <label for="targetDate">Target Date</label>
+        <input type="date" id="targetDate" required>
+
+        <button type="submit">Create Goal</button>
+      </form>
+
+      <p id="savingsMessage" role="status"></p>
+    </section>
+
+    <!-- GOALS LIST -->
+    <section class="content-card">
+      <h2>Your Savings Goals</h2>
+
+      <div id="savingsGoalsList"></div>
+
+      <p id="emptySavingsMessage">No savings goals yet. Create your first goal!</p>
+    </section>
+
+  </main>
+</div>
+
+<script type="module" src="savings-auth.js"></script>
+</body>
+</html>

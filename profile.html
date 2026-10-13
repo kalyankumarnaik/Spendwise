@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile | SpendWise</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+  <main class="auth-container">
+    <section class="auth-card">
+      <a class="brand" href="index.html">₹ SpendWise</a>
+      <h1>My Profile</h1>
+      <p class="subtitle">Manage your account details.</p>
+
+      <p><strong>Name:</strong> <span id="profileName">Loading...</span></p>
+      <p><strong>Email:</strong> <span id="profileEmail">Loading...</span></p>
+
+      <button id="backButton" type="button">Back to Dashboard</button>
+      <button id="logoutButton" type="button" style="margin-top: 12px;">
+        Log Out
+      </button>
+
+      <p id="profileMessage" role="status"></p>
+    </section>
+  </main>
+
+  <script type="module" src="profile.js"></script>
+</body>
+</html>
