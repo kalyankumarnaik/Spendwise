@@ -78,9 +78,10 @@
 
         <!-- Avatar Picture & Controls -->
         <div class="profile-avatar-section">
-          <div class="avatar-large" id="avatarPreviewContainer">
+          <div class="avatar-large" id="avatarPreviewContainer" role="button" tabindex="0" title="Click to choose a photo" aria-label="Upload profile photo">
             <span id="avatarPlaceholder">👤</span>
             <img id="avatarImage" src="" alt="Profile Photo" style="display: none;">
+            <div class="avatar-overlay-badge" aria-hidden="true">📷 Change</div>
           </div>
           <div class="avatar-controls">
             <div class="avatar-buttons">
@@ -91,8 +92,8 @@
                 Remove Photo
               </button>
             </div>
-            <input type="file" id="avatarFileInput" accept="image/*" style="display: none;">
-            <p class="avatar-hint">JPG, PNG, WebP or pick an avatar below.</p>
+            <input type="file" id="avatarFileInput" accept="image/*,image/png,image/jpeg,image/webp" style="display: none;">
+            <p class="avatar-hint">Click circle or button to upload photo (JPG, PNG, WebP).</p>
           </div>
         </div>
 
