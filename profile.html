@@ -181,6 +181,20 @@
       object-fit: cover !important;
       display: block !important;
     }
+
+    .visually-hidden-file-input {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
   </style>
 </head>
 <body>
@@ -252,21 +266,21 @@
 
         <!-- Avatar Picture & Controls -->
         <div class="profile-avatar-section">
-          <div class="avatar-large" id="avatarPreviewContainer" role="button" tabindex="0" title="Click to choose a photo" aria-label="Upload profile photo">
+          <label for="avatarFileInput" class="avatar-large" id="avatarPreviewContainer" title="Click to choose a photo" aria-label="Upload profile photo" tabindex="0">
             <span id="avatarPlaceholder">👤</span>
             <img id="avatarImage" src="" alt="Profile Photo" style="display: none;">
             <div class="avatar-overlay-badge" aria-hidden="true">📷 Change</div>
-          </div>
+          </label>
           <div class="avatar-controls">
             <div class="avatar-buttons">
-              <button type="button" id="choosePhotoBtn" class="secondary-button" style="display: inline-flex; align-items: center; gap: 6px;">
+              <label for="avatarFileInput" id="choosePhotoBtn" class="secondary-button" style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;" tabindex="0">
                 📷 Choose Photo
-              </button>
+              </label>
               <button type="button" id="removePhotoBtn" class="secondary-button" style="display: none;">
                 Remove Photo
               </button>
             </div>
-            <input type="file" id="avatarFileInput" accept="image/*,image/png,image/jpeg,image/webp" style="display: none;">
+            <input type="file" id="avatarFileInput" accept="image/*,image/png,image/jpeg,image/webp" class="visually-hidden-file-input">
             <p class="avatar-hint">Click circle or button to upload photo (JPG, PNG, WebP).</p>
           </div>
         </div>
