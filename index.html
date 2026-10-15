@@ -4,7 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SpendWise | Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="SpendWise — Smart Expense, Budget, Bills, and Savings Tracker.">
+  <meta name="theme-color" content="#167a55">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="stylesheet" href="style.css?v=2.0">
+  <style>
+    .top-profile .avatar {
+      width: 34px !important;
+      height: 34px !important;
+      min-width: 34px !important;
+      min-height: 34px !important;
+      border-radius: 50% !important;
+      background: #e8f5ee !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 17px !important;
+      overflow: hidden !important;
+      flex-shrink: 0 !important;
+    }
+    .top-profile .avatar img {
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 50% !important;
+      object-fit: cover !important;
+      display: block !important;
+    }
+  </style>
 </head>
 <body>
 
@@ -73,7 +100,7 @@
 
       <!-- WELCOME -->
       <section class="welcome-section">
-        <h2>Welcome to SpendWise!</h2>
+        <h2 id="welcomeGreeting">Hello! Welcome to SpendWise.</h2>
         <p>Here's an overview of your financial activity.</p>
       </section>
 
@@ -111,6 +138,33 @@
           </div>
           <p>Spent This Month: <strong id="monthlySpent">₹0.00</strong></p>
           <p id="budgetMessage">Set a budget to track your spending.</p>
+        </div>
+      </section>
+
+      <!-- BILLS & SAVINGS AT A GLANCE -->
+      <section class="dashboard-section">
+        <div class="summary-cards" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+          <article class="card">
+            <div class="section-title-row" style="margin-bottom: 6px;">
+              <p style="margin: 0; font-weight: 600;">Upcoming Bills</p>
+              <a href="bills.html" style="font-size: 13px;">Manage Bills →</a>
+            </div>
+            <h3 id="pendingBillsTotal">₹0.00</h3>
+            <p style="font-size: 13px; color: var(--muted); margin: 4px 0 0;">
+              <span id="pendingBills">0</span> pending bill(s) (<span id="totalBills">0</span> total)
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="section-title-row" style="margin-bottom: 6px;">
+              <p style="margin: 0; font-weight: 600;">Savings Goals</p>
+              <a href="savings.html" style="font-size: 13px;">View Goals →</a>
+            </div>
+            <h3 id="totalSaved">₹0.00</h3>
+            <p style="font-size: 13px; color: var(--muted); margin: 4px 0 0;">
+              <span id="activeGoals">0</span> active goal(s)
+            </p>
+          </article>
         </div>
       </section>
 
@@ -155,6 +209,7 @@
     </main>
   </div>
 
+  <script src="ui.js"></script>
   <script src="nav.js"></script>
   <script type="module" src="dashboard-auth.js"></script>
 </body>

@@ -130,15 +130,28 @@ authForm.addEventListener("submit", async (event) => {
         displayName: displayName
       });
 
+      localStorage.setItem("spendwise_user_name", displayName);
+
       showMessage("Account created successfully. Opening SpendWise...");
 
       window.location.replace("index.html");
     } else {
-      await signInWithEmailAndPassword(
+      const credential = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
+
+      if (credential.user.displayName) {
+        localStorage.setItem("spendwise_user_name", credential.user.displayName);
+      }
+      const userAvatar = localStorage.getItem(`spendwise_avatar_${credential.user.uid}`) ||
+                         localStorage.getItem("spendwise_global_avatar") ||
+                         credential.user.photoURL;
+      if (userAvatar) {
+        localStorage.setItem("spendwise_user_photo", userAvatar);
+        localStorage.setItem(`spendwise_avatar_${credential.user.uid}`, userAvatar);
+      }
 
       window.location.replace("index.html");
     }
@@ -154,8 +167,16 @@ authForm.addEventListener("submit", async (event) => {
         "Choose a stronger password with at least 6 characters.",
       "auth/invalid-credential":
         "Incorrect email or password.",
+      "auth/wrong-password":
+        "Incorrect password. Please try again.",
+      "auth/invalid-login-credentials":
+        "Incorrect email or password.",
       "auth/user-not-found":
         "No account found. Please register first.",
+      "auth/user-disabled":
+        "This account has been disabled.",
+      "auth/operation-not-allowed":
+        "Email/password sign-in is not enabled.",
       "auth/too-many-requests":
         "Too many attempts. Please wait and try again.",
       "auth/network-request-failed":

@@ -8,12 +8,19 @@ const budgetProgressBar = document.getElementById("budgetProgressBar");
 const budgetPercentage = document.getElementById("budgetPercentage");
 const budgetStatus = document.getElementById("budgetStatus");
 
+function notify(msg, type = "info") {
+  if (window.showToast) {
+    window.showToast(msg, type);
+  }
+}
+
 function formatCurrency(amount) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(amount);
+  }).format(Number(amount) || 0);
 }
 
 function getMonthlyExpenses() {
@@ -29,7 +36,7 @@ function getMonthlyExpenses() {
 
   const now = new Date();
 
-  return expenses
+  const totalPaise = expenses
     .filter((expense) => {
       if (!expense.date) return false;
 
@@ -41,18 +48,21 @@ function getMonthlyExpenses() {
       );
     })
     .reduce(
-      (total, expense) => total + Number(expense.amount || 0),
+      (total, expense) => total + Math.round(Number(expense.amount || 0) * 100),
       0
     );
+
+  return Math.round(totalPaise) / 100;
 }
 
 function renderBudget() {
-  const budget = Number(
+  const rawBudget = Number(
     localStorage.getItem("spendwise_budget") || 0
   );
+  const budget = Math.round((Number.isFinite(rawBudget) && rawBudget > 0 ? rawBudget : 0) * 100) / 100;
 
   const spent = getMonthlyExpenses();
-  const remaining = budget - spent;
+  const remaining = Math.round((budget - spent) * 100) / 100;
   const percentage = budget > 0 ? (spent / budget) * 100 : 0;
 
   budgetAmount.textContent = formatCurrency(budget);
@@ -78,25 +88,39 @@ function renderBudget() {
 budgetForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
-  const amount = Number(budgetInput.value);
+  const rawAmount = Number(budgetInput.value);
 
-  if (!Number.isFinite(amount) || amount <= 0) {
-    budgetMessage.textContent =
-      "Please enter an amount greater than zero.";
+  if (!Number.isFinite(rawAmount) || rawAmount <= 0) {
+    const err = "Please enter an amount greater than zero.";
+    budgetMessage.textContent = err;
+    notify(err, "error");
     return;
   }
+
+  const amount = Math.round(rawAmount * 100) / 100;
 
   try {
     localStorage.setItem("spendwise_budget", String(amount));
 
     renderBudget();
-    budgetMessage.textContent = "Monthly budget saved successfully!";
+    const successMsg = "Monthly budget saved successfully!";
+    budgetMessage.textContent = successMsg;
+    notify(successMsg, "success");
     budgetInput.value = "";
   } catch (error) {
     console.error("Unable to save budget:", error);
-    budgetMessage.textContent =
-      "Unable to save. Please check your browser storage settings.";
+    const failMsg = "Unable to save. Please check your browser storage settings.";
+    budgetMessage.textContent = failMsg;
+    notify(failMsg, "error");
   }
 });
 
 renderBudget();
+
+// Auto-refresh when returning to page or when storage changes in another tab
+window.addEventListener("pageshow", renderBudget);
+window.addEventListener("storage", (e) => {
+  if (!e.key || e.key === "spendwise_budget" || e.key === "spendwise_expenses") {
+    renderBudget();
+  }
+});

@@ -13,6 +13,15 @@ const activeGoalsElement = document.getElementById("activeGoals");
 
 const SAVINGS_KEY = "spendwise_savings";
 
+const toPaise = (val) => Math.round((Number(val) || 0) * 100);
+const fromPaise = (paise) => Math.round(paise) / 100;
+
+function notify(msg, type = "info") {
+  if (window.showToast) {
+    window.showToast(msg, type);
+  }
+}
+
 function getSavingsGoals() {
   try {
     return JSON.parse(localStorage.getItem(SAVINGS_KEY) || "[]");
@@ -29,8 +38,9 @@ function formatCurrency(amount) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(amount);
+  }).format(Number(amount) || 0);
 }
 
 function renderSavingsGoals() {
@@ -38,18 +48,14 @@ function renderSavingsGoals() {
 
   savingsGoalsList.replaceChildren();
 
-  const totalSaved = goals.reduce(
-    (sum, goal) => sum + Number(goal.saved || 0), 0
-  );
+  // Precise total calculation using integer paise
+  const totalSavedPaise = goals.reduce((sum, goal) => sum + toPaise(goal.saved), 0);
+  const totalTargetsPaise = goals.reduce((sum, goal) => sum + toPaise(goal.target), 0);
 
-  const totalTargets = goals.reduce(
-    (sum, goal) => sum + Number(goal.target || 0), 0
-  );
-
-  totalSavedElement.textContent = formatCurrency(totalSaved);
-  totalTargetsElement.textContent = formatCurrency(totalTargets);
+  totalSavedElement.textContent = formatCurrency(fromPaise(totalSavedPaise));
+  totalTargetsElement.textContent = formatCurrency(fromPaise(totalTargetsPaise));
   activeGoalsElement.textContent = goals.filter(
-    goal => Number(goal.saved) < Number(goal.target)
+    goal => toPaise(goal.saved) < toPaise(goal.target)
   ).length;
 
   emptySavingsMessage.hidden = goals.length > 0;
@@ -67,16 +73,16 @@ function renderSavingsGoals() {
     const saved = document.createElement("p");
     saved.textContent = `Saved: ${formatCurrency(goal.saved)}`;
 
+    const remainingPaise = Math.max(0, toPaise(goal.target) - toPaise(goal.saved));
     const remaining = document.createElement("p");
-    remaining.textContent =
-      `Remaining: ${formatCurrency(Math.max(0, goal.target - goal.saved))}`;
+    remaining.textContent = `Remaining: ${formatCurrency(fromPaise(remainingPaise))}`;
 
     const date = document.createElement("p");
     date.textContent = `Target date: ${goal.date}`;
 
-    const percentage = Math.min(
-      100, (goal.saved / goal.target) * 100
-    );
+    const percentage = goal.target > 0
+      ? Math.min(100, (toPaise(goal.saved) / toPaise(goal.target)) * 100)
+      : 0;
 
     const progressTrack = document.createElement("div");
     progressTrack.className = "savings-progress-track";
@@ -100,20 +106,23 @@ function renderSavingsGoals() {
     const addButton = document.createElement("button");
     addButton.type = "button";
     addButton.textContent = "Add Savings";
+    addButton.className = "page-button";
 
     addButton.addEventListener("click", () => {
-      const amount = Number(addAmount.value);
+      const rawAdd = Number(addAmount.value);
 
-      if (!Number.isFinite(amount) || amount <= 0) {
-        alert("Enter an amount greater than zero.");
+      if (!Number.isFinite(rawAdd) || rawAdd <= 0) {
+        notify("Enter an amount greater than zero.", "error");
         return;
       }
 
+      const addPaise = toPaise(rawAdd);
       const updatedGoals = getSavingsGoals().map(item => {
         if (item.id === goal.id) {
+          const newSavedPaise = Math.min(toPaise(item.target), toPaise(item.saved) + addPaise);
           return {
             ...item,
-            saved: Math.min(item.target, item.saved + amount)
+            saved: fromPaise(newSavedPaise)
           };
         }
         return item;
@@ -121,28 +130,44 @@ function renderSavingsGoals() {
 
       try {
         saveSavingsGoals(updatedGoals);
+        notify(`Added ${formatCurrency(fromPaise(addPaise))} to "${goal.name}"!`, "success");
         renderSavingsGoals();
       } catch (error) {
         console.error(error);
-        alert("Unable to save your progress.");
+        notify("Unable to save your progress.", "error");
       }
     });
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
     deleteButton.textContent = "Delete Goal";
+    deleteButton.className = "danger-button";
 
-    deleteButton.addEventListener("click", () => {
-      if (!confirm(`Delete the goal "${goal.name}"?`)) return;
+    deleteButton.addEventListener("click", async () => {
+      let confirmed = false;
+      if (window.showConfirm) {
+        confirmed = await window.showConfirm({
+          title: "Delete Savings Goal",
+          message: `Are you sure you want to delete the goal "${goal.name}"?`,
+          confirmText: "Delete",
+          cancelText: "Cancel",
+          isDanger: true
+        });
+      } else {
+        confirmed = confirm(`Delete the goal "${goal.name}"?`);
+      }
+
+      if (!confirmed) return;
 
       try {
         saveSavingsGoals(
           getSavingsGoals().filter(item => item.id !== goal.id)
         );
+        notify("Savings goal deleted.", "info");
         renderSavingsGoals();
       } catch (error) {
         console.error(error);
-        alert("Unable to delete the goal.");
+        notify("Unable to delete the goal.", "error");
       }
     });
 
@@ -167,28 +192,31 @@ savingsForm.addEventListener("submit", event => {
   event.preventDefault();
 
   const name = goalName.value.trim();
-  const target = Number(targetAmount.value);
-  const saved = Number(initialSaved.value);
+  const rawTarget = Number(targetAmount.value);
+  const rawSaved = Number(initialSaved.value);
   const date = targetDate.value;
 
   if (
     !name ||
-    !Number.isFinite(target) ||
-    target <= 0 ||
-    !Number.isFinite(saved) ||
-    saved < 0 ||
-    saved > target ||
+    !Number.isFinite(rawTarget) ||
+    rawTarget <= 0 ||
+    !Number.isFinite(rawSaved) ||
+    rawSaved < 0 ||
+    rawSaved > rawTarget ||
     !date
   ) {
-    savingsMessage.textContent =
-      "Enter valid details. Your initial savings cannot exceed the target.";
+    const errorMsg = "Enter valid details. Your initial savings cannot exceed the target.";
+    savingsMessage.textContent = errorMsg;
+    notify(errorMsg, "error");
     return;
   }
 
+  const target = fromPaise(toPaise(rawTarget));
+  const saved = fromPaise(toPaise(rawSaved));
   const goals = getSavingsGoals();
 
   goals.push({
-    id: crypto.randomUUID(),
+    id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     name,
     target,
     saved,
@@ -200,11 +228,21 @@ savingsForm.addEventListener("submit", event => {
     savingsForm.reset();
     initialSaved.value = "0";
     savingsMessage.textContent = "Savings goal created successfully!";
+    notify("Savings goal created successfully!", "success");
     renderSavingsGoals();
   } catch (error) {
     console.error(error);
     savingsMessage.textContent = "Unable to save your savings goal.";
+    notify("Unable to save your savings goal.", "error");
   }
 });
 
 renderSavingsGoals();
+
+// Auto-refresh when returning to page or when storage changes in another tab
+window.addEventListener("pageshow", renderSavingsGoals);
+window.addEventListener("storage", (e) => {
+  if (!e.key || e.key === SAVINGS_KEY) {
+    renderSavingsGoals();
+  }
+});

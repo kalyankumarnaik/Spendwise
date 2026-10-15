@@ -238,14 +238,27 @@ body {
 }
 
 .avatar {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   background: var(--primary-light);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 15px;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
 }
 
 /* Welcome section */
@@ -665,6 +678,172 @@ tbody tr:last-child td {
   font-size: 20px;
 }
 
+/* Profile Avatar & Settings */
+.profile-avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 24px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.avatar-large,
+#avatarPreviewContainer {
+  width: 104px !important;
+  height: 104px !important;
+  min-width: 104px !important;
+  min-height: 104px !important;
+  border-radius: 50% !important;
+  background: var(--primary-light) !important;
+  border: 3px solid var(--primary-border) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 14px rgba(22, 122, 85, 0.15) !important;
+  flex-shrink: 0 !important;
+  cursor: pointer !important;
+  position: relative !important;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+  user-select: none !important;
+  outline: none !important;
+}
+
+.avatar-large:hover,
+#avatarPreviewContainer:hover,
+.avatar-large:focus-visible,
+#avatarPreviewContainer:focus-visible {
+  transform: scale(1.05) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 6px 20px rgba(22, 122, 85, 0.28) !important;
+}
+
+.avatar-large .avatar-overlay-badge {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: rgba(15, 23, 42, 0.72) !important;
+  color: #ffffff !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  padding: 4px 0 6px !important;
+  opacity: 0 !important;
+  transition: opacity 0.2s ease !important;
+  pointer-events: none !important;
+  letter-spacing: 0.3px !important;
+}
+
+.avatar-large:hover .avatar-overlay-badge,
+#avatarPreviewContainer:hover .avatar-overlay-badge,
+.avatar-large:focus-visible .avatar-overlay-badge,
+#avatarPreviewContainer:focus-visible .avatar-overlay-badge {
+  opacity: 1 !important;
+}
+
+.avatar-large img,
+#avatarImage {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.avatar-large span,
+#avatarPlaceholder {
+  font-size: 52px !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  user-select: none !important;
+}
+
+.avatar-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.avatar-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.avatar-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.avatar-presets-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+button.preset-btn,
+.preset-btn {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  border-radius: 50% !important;
+  border: 2px solid var(--border) !important;
+  background: var(--white) !important;
+  font-size: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease !important;
+  user-select: none !important;
+  outline: none !important;
+}
+
+button.preset-btn:hover,
+.preset-btn:hover {
+  transform: scale(1.15) !important;
+  border-color: var(--primary) !important;
+  background: var(--primary-light) !important;
+  box-shadow: 0 4px 12px rgba(22, 122, 85, 0.2) !important;
+}
+
+button.preset-btn.active,
+.preset-btn.active {
+  border-color: var(--primary) !important;
+  background: var(--primary-light) !important;
+  box-shadow: 0 0 0 3px rgba(22, 122, 85, 0.35) !important;
+  transform: scale(1.1) !important;
+}
+
+.top-profile .avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.visually-hidden-file-input {
+  position: absolute !important;
+  width: 0.1px !important;
+  height: 0.1px !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  z-index: -1 !important;
+}
+
 .profile-detail {
   padding: 14px 0;
   border-bottom: 1px solid var(--border);
@@ -913,4 +1092,171 @@ tbody tr:last-child td {
   .page-card {
     padding: 14px;
   }
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATIONS
+   ========================================================================== */
+
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2200;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  max-width: 380px;
+  width: calc(100% - 48px);
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #ffffff;
+  color: var(--text);
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+  font-size: 14px;
+  font-weight: 500;
+  pointer-events: auto;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  border-left: 5px solid var(--primary);
+}
+
+.toast-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-hide {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.toast-success {
+  border-left-color: #16a34a;
+}
+
+.toast-success .toast-icon {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.toast-error {
+  border-left-color: var(--danger);
+}
+
+.toast-error .toast-icon {
+  color: var(--danger);
+  font-weight: bold;
+}
+
+.toast-info {
+  border-left-color: #0284c7;
+}
+
+.toast-info .toast-icon {
+  color: #0284c7;
+  font-weight: bold;
+}
+
+.toast-message {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .toast-container {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+    width: auto;
+  }
+}
+
+/* ==========================================================================
+   CUSTOM CONFIRM MODAL DIALOG
+   ========================================================================== */
+
+.confirm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 2300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.confirm-modal-backdrop.modal-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.confirm-modal-dialog {
+  background: var(--white);
+  border-radius: 14px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  padding: 24px;
+  transform: scale(0.92);
+  transition: transform 0.2s ease;
+}
+
+.confirm-modal-backdrop.modal-visible .confirm-modal-dialog {
+  transform: scale(1);
+}
+
+.confirm-modal-header h3 {
+  margin: 0 0 10px;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.confirm-modal-body p {
+  margin: 0 0 22px;
+  color: #4b5e53;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.confirm-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.confirm-modal-actions button {
+  padding: 10px 18px;
+  font-size: 14px;
+}
+
+.danger-button {
+  background: var(--danger);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.danger-button:hover {
+  background: var(--danger-hover);
 }

@@ -12,6 +12,15 @@ const paidBills = document.getElementById("paidBills");
 
 const BILL_KEY = "spendwise_bills";
 
+const toPaise = (val) => Math.round((Number(val) || 0) * 100);
+const fromPaise = (paise) => Math.round(paise) / 100;
+
+function notify(msg, type = "info") {
+  if (window.showToast) {
+    window.showToast(msg, type);
+  }
+}
+
 function getBills() {
   try {
     return JSON.parse(localStorage.getItem(BILL_KEY) || "[]");
@@ -28,8 +37,9 @@ function formatCurrency(amount) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(amount);
+  }).format(Number(amount) || 0);
 }
 
 function renderBills() {
@@ -63,11 +73,15 @@ function renderBills() {
     statusCell.textContent = bill.status;
 
     const actionCell = document.createElement("td");
+    actionCell.className = "expense-actions";
 
     if (bill.status === "Pending") {
       const paidButton = document.createElement("button");
       paidButton.type = "button";
       paidButton.textContent = "Mark Paid";
+      paidButton.className = "page-button";
+      paidButton.style.padding = "6px 12px";
+      paidButton.style.fontSize = "13px";
 
       paidButton.addEventListener("click", () => {
         updateBillStatus(bill.id);
@@ -79,7 +93,9 @@ function renderBills() {
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
     deleteButton.textContent = "Delete";
-    deleteButton.style.marginLeft = "8px";
+    deleteButton.className = "danger-button";
+    deleteButton.style.padding = "6px 12px";
+    deleteButton.style.fontSize = "13px";
 
     deleteButton.addEventListener("click", () => {
       deleteBill(bill.id);
@@ -103,18 +119,21 @@ billForm.addEventListener("submit", event => {
   event.preventDefault();
 
   const title = billTitle.value.trim();
-  const amount = Number(billAmount.value);
+  const rawAmount = Number(billAmount.value);
   const dueDate = billDueDate.value;
 
-  if (!title || !Number.isFinite(amount) || amount <= 0 || !dueDate) {
+  if (!title || !Number.isFinite(rawAmount) || rawAmount <= 0 || !dueDate) {
     billMessage.textContent = "Please enter valid bill details.";
+    notify("Please enter valid bill details.", "error");
     return;
   }
 
+  // Precise 2-decimal rounded amount
+  const amount = fromPaise(toPaise(rawAmount));
   const bills = getBills();
 
   bills.push({
-    id: crypto.randomUUID(),
+    id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     title,
     amount,
     dueDate,
@@ -125,10 +144,12 @@ billForm.addEventListener("submit", event => {
     saveBills(bills);
     billForm.reset();
     billMessage.textContent = "Bill added successfully!";
+    notify("Bill added successfully!", "success");
     renderBills();
   } catch (error) {
     console.error(error);
     billMessage.textContent = "Unable to save the bill.";
+    notify("Unable to save the bill.", "error");
   }
 });
 
@@ -139,27 +160,51 @@ function updateBillStatus(id) {
 
   try {
     saveBills(bills);
+    notify("Bill marked as paid!", "success");
     renderBills();
   } catch (error) {
     console.error(error);
-    alert("Unable to update bill status.");
+    notify("Unable to update bill status.", "error");
   }
 }
 
-function deleteBill(id) {
-  if (!confirm("Are you sure you want to delete this bill?")) {
-    return;
+async function deleteBill(id) {
+  const bill = getBills().find(b => b.id === id);
+  const billName = bill ? `"${bill.title}"` : "this bill";
+
+  let confirmed = false;
+  if (window.showConfirm) {
+    confirmed = await window.showConfirm({
+      title: "Delete Bill",
+      message: `Are you sure you want to delete ${billName}?`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      isDanger: true
+    });
+  } else {
+    confirmed = confirm(`Are you sure you want to delete ${billName}?`);
   }
 
-  const bills = getBills().filter(bill => bill.id !== id);
+  if (!confirmed) return;
+
+  const bills = getBills().filter(b => b.id !== id);
 
   try {
     saveBills(bills);
+    notify("Bill deleted.", "info");
     renderBills();
   } catch (error) {
     console.error(error);
-    alert("Unable to delete the bill.");
+    notify("Unable to delete the bill.", "error");
   }
 }
 
 renderBills();
+
+// Auto-refresh when returning to page or when storage changes in another tab
+window.addEventListener("pageshow", renderBills);
+window.addEventListener("storage", (e) => {
+  if (!e.key || e.key === BILL_KEY) {
+    renderBills();
+  }
+});

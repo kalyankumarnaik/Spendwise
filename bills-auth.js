@@ -23,25 +23,70 @@ const auth = getAuth(app);
 
 let pageLoaded = false;
 
+function resolveUserName(user) {
+  let name = localStorage.getItem("spendwise_user_name") || "";
+  if (!name && user) {
+    name = user.displayName || "";
+  }
+  if (!name && user && user.email) {
+    const prefix = user.email.split("@")[0].replace(/[0-9._-]+/g, " ").trim();
+    if (prefix) {
+      name = prefix.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+    } else {
+      name = user.email.split("@")[0];
+    }
+  }
+  return name.trim();
+}
+
 onAuthStateChanged(auth, user => {
   if (!user) {
     window.location.replace("login.html");
     return;
   }
 
-  const logoutButton = document.getElementById("logoutButton");
+  // Restore user's avatar across sessions with universal fallback
+  const userKey = `spendwise_avatar_${user.uid}`;
+  const photo = localStorage.getItem(userKey) ||
+                localStorage.getItem("spendwise_user_photo") ||
+                localStorage.getItem("spendwise_global_avatar") ||
+                user.photoURL || "";
 
-  if (logoutButton) {
-    logoutButton.onclick = async () => {
+  if (photo) {
+    localStorage.setItem(userKey, photo);
+    localStorage.setItem("spendwise_user_photo", photo);
+    localStorage.setItem("spendwise_global_avatar", photo);
+  }
+
+  // Restore user name
+  const name = resolveUserName(user);
+  if (name) {
+    localStorage.setItem("spendwise_user_name", name);
+  }
+
+  if (window.syncTopbarProfile) {
+    window.syncTopbarProfile();
+  }
+
+  // Bind all logout triggers
+  const logoutButtons = document.querySelectorAll("#logoutButton, #sidebarLogoutButton, .sidebar-logout");
+  logoutButtons.forEach((btn) => {
+    btn.onclick = async () => {
       try {
+        localStorage.removeItem("spendwise_user_name");
+        localStorage.removeItem("spendwise_user_photo");
         await signOut(auth);
         window.location.replace("login.html");
       } catch (error) {
-        console.error(error);
-        alert("Unable to log out. Please try again.");
+        console.error("Logout error:", error);
+        if (window.showToast) {
+          window.showToast("Unable to log out. Please try again.", "error");
+        } else {
+          alert("Unable to log out. Please try again.");
+        }
       }
     };
-  }
+  });
 
   if (!pageLoaded) {
     pageLoaded = true;
@@ -51,7 +96,11 @@ onAuthStateChanged(auth, user => {
 
     script.onerror = () => {
       pageLoaded = false;
-      alert("Unable to load bills.js. Check the filename.");
+      if (window.showToast) {
+        window.showToast("Unable to load bills.js.", "error");
+      } else {
+        alert("Unable to load bills.js.");
+      }
     };
 
     document.body.appendChild(script);

@@ -1,0 +1,20 @@
+{
+  "name": "spendwise",
+  "version": "2.0.0",
+  "description": "Smart Expense Tracker PWA with monthly budget, bills, savings goals, and profile management.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "expense-tracker",
+    "finance",
+    "budget",
+    "bills",
+    "savings",
+    "pwa",
+    "javascript"
+  ],
+  "author": "SpendWise",
+  "license": "MIT"
+}

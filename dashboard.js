@@ -74,18 +74,23 @@ function getDashboardData() {
     isCurrentMonth(expense.date)
   );
 
-  const totalExpenses = validExpenses.reduce(
-    (sum, expense) => sum + Number(expense.amount),
-    0
-  );
+  const toPaise = (v) => Math.round((Number(v) || 0) * 100);
+  const fromPaise = (p) => Math.round(p) / 100;
 
-  const monthlySpent = monthlyExpenses.reduce(
-    (sum, expense) => sum + Number(expense.amount),
+  const totalExpensesPaise = validExpenses.reduce(
+    (sum, expense) => sum + toPaise(expense.amount),
     0
   );
+  const totalExpenses = fromPaise(totalExpensesPaise);
+
+  const monthlySpentPaise = monthlyExpenses.reduce(
+    (sum, expense) => sum + toPaise(expense.amount),
+    0
+  );
+  const monthlySpent = fromPaise(monthlySpentPaise);
 
   const averageExpense = validExpenses.length > 0
-    ? totalExpenses / validExpenses.length
+    ? fromPaise(Math.round(totalExpensesPaise / validExpenses.length))
     : 0;
 
   const pendingBills = bills.filter(
@@ -96,9 +101,11 @@ function getDashboardData() {
     bill => bill.status === "Paid"
   );
 
-  const pendingBillsAmount = pendingBills.reduce(
-    (sum, bill) => sum + Math.max(0, Number(bill.amount) || 0),
-    0
+  const pendingBillsAmount = fromPaise(
+    pendingBills.reduce(
+      (sum, bill) => sum + Math.max(0, toPaise(bill.amount)),
+      0
+    )
   );
 
   const validSavings = savings.filter(goal =>
@@ -106,14 +113,18 @@ function getDashboardData() {
     Number(goal.target) >= 0
   );
 
-  const totalSaved = validSavings.reduce(
-    (sum, goal) => sum + Math.max(0, Number(goal.saved) || 0),
-    0
+  const totalSaved = fromPaise(
+    validSavings.reduce(
+      (sum, goal) => sum + Math.max(0, toPaise(goal.saved)),
+      0
+    )
   );
 
-  const totalTargets = validSavings.reduce(
-    (sum, goal) => sum + Number(goal.target),
-    0
+  const totalTargets = fromPaise(
+    validSavings.reduce(
+      (sum, goal) => sum + toPaise(goal.target),
+      0
+    )
   );
 
   const activeGoals = validSavings.filter(
@@ -360,14 +371,29 @@ function renderCategoryChart(expenses) {
   const barHeight = 26;
   const gap = 15;
 
+  const categoryColors = {
+    "Food": "#167a55",
+    "Travel": "#0d9488",
+    "Shopping": "#8b5cf6",
+    "Bills": "#3b82f6",
+    "Education": "#f59e0b",
+    "Health": "#ef4444",
+    "Entertainment": "#ec4899",
+    "Investment": "#10b981",
+    "Other": "#64748b"
+  };
+
   visibleEntries.forEach(([category, amount], index) => {
     const y = 12 + index * (barHeight + gap);
 
     if (y + barHeight > height) return;
 
+    const fillWidth = Math.max(4, (barWidth * amount) / maxAmount);
+    const color = categoryColors[category] || "#167a55";
+
     // Category label.
-    ctx.fillStyle = "#334155";
-    ctx.font = "13px Arial";
+    ctx.fillStyle = "#1e293b";
+    ctx.font = "600 13px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.fillText(
@@ -377,21 +403,28 @@ function renderCategoryChart(expenses) {
     );
 
     // Background track.
-    ctx.fillStyle = "#e2e8f0";
-    ctx.fillRect(labelWidth, y, barWidth, barHeight);
+    ctx.fillStyle = "#f1f5f9";
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(labelWidth, y, barWidth, barHeight, 6);
+      ctx.fill();
+    } else {
+      ctx.fillRect(labelWidth, y, barWidth, barHeight);
+    }
 
     // Spending bar.
-    ctx.fillStyle = "#2563eb";
-    ctx.fillRect(
-      labelWidth,
-      y,
-      Math.max(2, barWidth * amount / maxAmount),
-      barHeight
-    );
+    ctx.fillStyle = color;
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(labelWidth, y, fillWidth, barHeight, 6);
+      ctx.fill();
+    } else {
+      ctx.fillRect(labelWidth, y, fillWidth, barHeight);
+    }
 
     // Amount label.
     ctx.fillStyle = "#334155";
-    ctx.font = "12px Arial";
+    ctx.font = "600 12px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
     ctx.fillText(
       formatCurrency(amount),
       labelWidth + barWidth + 8,
@@ -404,9 +437,19 @@ function renderCategoryChart(expenses) {
 // RENDER THE COMPLETE DASHBOARD
 // ==========================================
 
+function updateDashboardGreeting() {
+  const greetingEl = document.getElementById("welcomeGreeting");
+  if (!greetingEl) return;
+  const name = localStorage.getItem("spendwise_user_name") || "";
+  if (name.trim()) {
+    greetingEl.textContent = `Hello, ${name.trim()}! Welcome to SpendWise.`;
+  }
+}
+
 function renderDashboard() {
   const data = getDashboardData();
 
+  updateDashboardGreeting();
   renderFinancialOverview(data);
   renderBudget(data);
   renderBills(data);

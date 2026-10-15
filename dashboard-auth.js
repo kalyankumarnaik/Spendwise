@@ -21,24 +21,84 @@ const auth = getAuth(app);
 
 let pageLoaded = false;
 
+function resolveUserName(user) {
+  let name = localStorage.getItem("spendwise_user_name") || "";
+  if (!name && user) {
+    name = user.displayName || "";
+  }
+  if (!name && user && user.email) {
+    const prefix = user.email.split("@")[0].replace(/[0-9._-]+/g, " ").trim();
+    if (prefix) {
+      name = prefix.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+    } else {
+      name = user.email.split("@")[0];
+    }
+  }
+  return name.trim();
+}
+
+function updateWelcomeGreeting(user) {
+  const greetingEl = document.getElementById("welcomeGreeting");
+  if (!greetingEl) return;
+  const name = resolveUserName(user);
+  if (name) {
+    greetingEl.textContent = `Hello, ${name}! Welcome to SpendWise.`;
+  } else {
+    greetingEl.textContent = "Hello! Welcome to SpendWise.";
+  }
+}
+
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.replace("login.html");
     return;
   }
 
-  const logoutButton = document.getElementById("logoutButton");
-  if (logoutButton) {
-    logoutButton.addEventListener("click", async () => {
+  // Restore user's avatar across sessions with universal fallback
+  const userKey = `spendwise_avatar_${user.uid}`;
+  const photo = localStorage.getItem(userKey) ||
+                localStorage.getItem("spendwise_user_photo") ||
+                localStorage.getItem("spendwise_global_avatar") ||
+                user.photoURL || "";
+
+  if (photo) {
+    localStorage.setItem(userKey, photo);
+    localStorage.setItem("spendwise_user_photo", photo);
+    localStorage.setItem("spendwise_global_avatar", photo);
+  }
+
+  // Restore user name
+  const name = resolveUserName(user);
+  if (name) {
+    localStorage.setItem("spendwise_user_name", name);
+  }
+
+  // Greet user on dashboard: "Hello, (name of user)! Welcome to SpendWise."
+  updateWelcomeGreeting(user);
+
+  if (window.syncTopbarProfile) {
+    window.syncTopbarProfile();
+  }
+
+  // Bind all logout triggers
+  const logoutButtons = document.querySelectorAll("#logoutButton, #sidebarLogoutButton, .sidebar-logout");
+  logoutButtons.forEach((btn) => {
+    btn.onclick = async () => {
       try {
+        localStorage.removeItem("spendwise_user_name");
+        localStorage.removeItem("spendwise_user_photo");
         await signOut(auth);
         window.location.replace("login.html");
       } catch (error) {
         console.error("Logout failed:", error);
-        alert("Unable to log out. Please try again.");
+        if (window.showToast) {
+          window.showToast("Unable to log out. Please try again.", "error");
+        } else {
+          alert("Unable to log out. Please try again.");
+        }
       }
-    });
-  }
+    };
+  });
 
   if (!pageLoaded) {
     pageLoaded = true;

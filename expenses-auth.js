@@ -1,4 +1,3 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import {
   getAuth,
@@ -19,24 +18,85 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+let pageLoaded = false;
+
+function resolveUserName(user) {
+  let name = localStorage.getItem("spendwise_user_name") || "";
+  if (!name && user) {
+    name = user.displayName || "";
+  }
+  if (!name && user && user.email) {
+    const prefix = user.email.split("@")[0].replace(/[0-9._-]+/g, " ").trim();
+    if (prefix) {
+      name = prefix.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+    } else {
+      name = user.email.split("@")[0];
+    }
+  }
+  return name.trim();
+}
+
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.replace("login.html");
     return;
   }
 
-  document.getElementById("logoutButton").addEventListener("click", async () => {
-    try {
-      await signOut(auth);
-      window.location.replace("login.html");
-    } catch (error) {
-      console.error(error);
-      alert("Unable to log out. Please try again.");
-    }
+  // Restore user's avatar across sessions with universal fallback
+  const userKey = `spendwise_avatar_${user.uid}`;
+  const photo = localStorage.getItem(userKey) ||
+                localStorage.getItem("spendwise_user_photo") ||
+                localStorage.getItem("spendwise_global_avatar") ||
+                user.photoURL || "";
+
+  if (photo) {
+    localStorage.setItem(userKey, photo);
+    localStorage.setItem("spendwise_user_photo", photo);
+    localStorage.setItem("spendwise_global_avatar", photo);
+  }
+
+  // Restore user name
+  const name = resolveUserName(user);
+  if (name) {
+    localStorage.setItem("spendwise_user_name", name);
+  }
+
+  if (window.syncTopbarProfile) {
+    window.syncTopbarProfile();
+  }
+
+  // Bind all logout triggers
+  const logoutButtons = document.querySelectorAll("#logoutButton, #sidebarLogoutButton, .sidebar-logout");
+  logoutButtons.forEach((btn) => {
+    btn.onclick = async () => {
+      try {
+        localStorage.removeItem("spendwise_user_name");
+        localStorage.removeItem("spendwise_user_photo");
+        await signOut(auth);
+        window.location.replace("login.html");
+      } catch (error) {
+        console.error("Logout failed:", error);
+        if (window.showToast) {
+          window.showToast("Unable to log out. Please try again.", "error");
+        } else {
+          alert("Unable to log out. Please try again.");
+        }
+      }
+    };
   });
 
-  const script = document.createElement("script");
-  script.src = "expenses.js";
-  script.onerror = () => alert("Unable to load the Expenses page JavaScript.");
-  document.body.appendChild(script);
+  if (!pageLoaded) {
+    pageLoaded = true;
+    const script = document.createElement("script");
+    script.src = "expenses.js";
+    script.onerror = () => {
+      pageLoaded = false;
+      if (window.showToast) {
+        window.showToast("Unable to load expenses.js.", "error");
+      } else {
+        alert("Unable to load expenses.js.");
+      }
+    };
+    document.body.appendChild(script);
+  }
 });
